@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Repository
 public class PostRepository {
@@ -23,12 +24,23 @@ public class PostRepository {
     }
 
     public List<Post> all() {
-        if (postMap.isEmpty()) throw new NotFoundException("List posts is empty");
-        return new ArrayList<>(postMap.values());
+
+        List<Post> result = new ArrayList<>(postMap.values()).stream()
+                .filter(x -> !x.isRemoved())
+                .collect(Collectors.toList());
+
+        if (!result.isEmpty()) return result;
+
+        throw new NotFoundException("List posts is empty");
+
     }
 
     public Optional<Post> getById(long id) {
-        return Optional.ofNullable(postMap.get(id));
+        if (!postMap.isEmpty() && !postMap.get(id).isRemoved()) {
+            return Optional.ofNullable(postMap.get(id));
+        }
+        throw new NotFoundException(String.format("Post with specified id %d not found", id));
+
     }
 
     public Post save(Post post) {
@@ -37,20 +49,20 @@ public class PostRepository {
             postMap.put(post.getId(), post);
             return post;
         }
-        if (postMap.containsKey(post.getId())) {
+        if (postMap.containsKey(post.getId()) && !postMap.get(post.getId()).isRemoved()) {
             postMap.put(post.getId(), post);
             return post;
         }
-        throw new NotFoundException("Post with specified id not found");
+        throw new NotFoundException(String.format("Post with specified id %d not found", post.getId()));
     }
 
     public void removeById(long id) {
 
-        if (postMap.containsKey(id)) {
-            postMap.remove(id);
+        if (postMap.containsKey(id) && !postMap.get(id).isRemoved()) {
+            postMap.get(id).removePost();
             return;
         }
-        throw new NotFoundException("Post with specified id not found");
+        throw new NotFoundException(String.format("Post with specified id %d not found", id));
     }
 
 }

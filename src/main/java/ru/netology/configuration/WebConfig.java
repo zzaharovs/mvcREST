@@ -12,7 +12,8 @@ public class WebConfig {
     @Bean
     public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
         final var bean = new RequestMappingHandlerAdapter();
-        bean.getMessageConverters().add(new GsonHttpMessageConverter());
+//        bean.getMessageConverters().add(new GsonHttpMessageConverter());
+        bean.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         return bean;
     }
 
