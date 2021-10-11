@@ -1,7 +1,7 @@
 package ru.netology.controller;
 
 
-import com.google.gson.JsonSyntaxException;
+//import com.google.gson.JsonSyntaxException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

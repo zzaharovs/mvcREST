@@ -1,12 +1,15 @@
 GET http://localhost:8080/api/posts
 
 ###
+GET http://localhost:8080/api/posts/2
+
+###
 
 POST http://localhost:8080/api/posts
 Content-Type: application/json
 
 {
-  "id":0,"content":"Test2 post"
+  "id":3,"content":"Test3 post"
 }
 
 ###
